@@ -1,0 +1,7 @@
+import { z } from "zod"; import { router, protectedProcedure } from "../routers"; import { db } from "../db"; import { monitoringStreams, monitoringEvents } from "../../../drizzle/schema"; import { eq, and, desc } from "drizzle-orm"; import { randomUUID } from "crypto";
+export const monitoringRouter = router({
+  createStream: protectedProcedure.input(z.object({ systemId: z.string(), name: z.string(), endpoint: z.string().optional(), config: z.record(z.unknown()).optional() })).mutation(async ({ input, ctx }) => { const id = randomUUID(); await db.insert(monitoringStreams).values({ id, systemId: input.systemId, orgId: ctx.orgId, name: input.name, endpoint: input.endpoint, config: input.config, status: "active", createdAt: new Date() }); return { id }; }),
+  listStreams: protectedProcedure.query(async ({ ctx }) => db.select().from(monitoringStreams).where(eq(monitoringStreams.orgId, ctx.orgId))),
+  listEvents: protectedProcedure.input(z.object({ streamId: z.string(), limit: z.number().default(50) })).query(async ({ input }) => db.select().from(monitoringEvents).where(eq(monitoringEvents.streamId, input.streamId)).orderBy(desc(monitoringEvents.detectedAt)).limit(input.limit)),
+  acknowledgeAlert: protectedProcedure.input(z.object({ eventId: z.string() })).mutation(async ({ input, ctx }) => { await db.update(monitoringEvents).set({ acknowledged: true, acknowledgedBy: ctx.userId }).where(eq(monitoringEvents.id, input.eventId)); return { success: true }; }),
+});
