@@ -1,6 +1,6 @@
 import {
   mysqlTable, varchar, text, int, boolean, json,
-  timestamp, decimal, mysqlEnum, index, primaryKey,
+  timestamp, decimal, mysqlEnum, index, uniqueIndex, primaryKey,
 } from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
 
@@ -333,7 +333,7 @@ export const alignmentMetrics = mysqlTable("alignment_metrics", {
   suggestionsGenerated: int("suggestions_generated").default(0),
   suggestionsApplied:   int("suggestions_applied").default(0),
   issueTypeBreakdown:   json("issue_type_breakdown"),
-}, (t) => ({ uniq: index("metrics_int_date").on(t.integrationId, t.date) }));
+}, (t) => ({ uniq: uniqueIndex("metrics_int_date").on(t.integrationId, t.date) }));
 
 // ─── Admin / Compliance Calendar ─────────────────────────────────────────────
 export const complianceDeadlines = mysqlTable("compliance_deadlines", {

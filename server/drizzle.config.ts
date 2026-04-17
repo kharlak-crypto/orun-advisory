@@ -1,10 +1,8 @@
 import type { Config } from "drizzle-kit";
 
-// NOTE: Run drizzle-kit from the repo root with:
-//   npx drizzle-kit push --config=drizzle/drizzle.config.ts
 export default {
-  schema: "./schema.ts",
-  out: "./migrations",
+  schema: "../drizzle/schema.ts",
+  out: "../drizzle/migrations",
   dialect: "mysql",
   dbCredentials: {
     url: process.env.DATABASE_URL\!,

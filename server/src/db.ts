@@ -8,5 +8,6 @@ const pool = mysql.createPool({
   waitForConnections: true,
 });
 
-export const db = drizzle(pool, { schema, mode: "default" });
+// In drizzle-orm v0.36 the `mode` option was removed for MySQL2
+export const db = drizzle(pool, { schema });
 export type DB = typeof db;

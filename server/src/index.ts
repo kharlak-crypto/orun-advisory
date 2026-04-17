@@ -115,4 +115,4 @@ app.listen(PORT, () => {
   console.log(`Orun Advisory server running on port ${PORT}`);
 });
 
-export type AppRouter = typeof appRouter;
+// AppRouter type is exported from ./routers — import from there
